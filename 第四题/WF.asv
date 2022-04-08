@@ -1,0 +1,39 @@
+clc;
+clear;
+
+I = imread('dog.jpg'); 
+I = rgb2gray(I);
+
+LEN = 21;
+Theta = 11;
+PSF = fspecial('motion', LEN, Theta);
+I2 = imfilter(I, PSF, 'conv', 'circular');
+
+I3 = imnoise(I2,"gaussian",0, 0.01);
+I4 = imnoise(I2,"gaussian",0,0.1);
+
+PSF1 = fspecial('motion', LEN, Theta);
+PSF2 = fspecial('motion', 2, 40);
+
+signal_var = var(I(:));
+
+I3_WF = deconvwnr(I3, PSF1, 0);
+I4_WF = deconvwnr(I4, PSF2, 0);
+
+
+figure(1);
+subplot(2, 2, 1); 
+imshow(I3);
+title('退化图像(低噪点)');
+
+subplot(2, 2, 2); 
+imshow(I3_WF);
+title('维纳滤波结果');
+
+subplot(2, 2, 3); 
+imshow(I4);
+title('退化图像(高噪点)');
+
+subplot(2, 2, 4); 
+imshow(I4_WF);
+title('维纳滤波结果');
