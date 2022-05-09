@@ -4,22 +4,23 @@ Orig_Img = imread('test.png');
 Orig_Img = im2gray(Orig_Img);
 
 % 去除椒盐噪声
-filter_img= medfilt2(Orig_Img, [5,5]);
+filter_img = medfilt2(Orig_Img, [4,4]);
 
 % 提取边界
 BW = edge(filter_img, "canny");
+
 % 进行霍夫变换
-[H, T, R, lines] = GetLinesResult(BW, 1.5563, -48:0.5:-26);
-[H1, T1, R1, lines1] = GetLinesResult(BW, 1.55, 47:0.5:60);
+[H, T, R, lines] = GetLinesResult(BW, 0.455, -90:0.5:-89);
+[H1, T1, R1, lines1] = GetLinesResult(BW, 0.555, -10:3:15);
 
-[target_lines] = GetTargetLines(lines, 2);
-[target_lines1] = GetTargetLines(lines1, 3);
-target_lines1 = target_lines1(:,2:3);
+[target_lines] = GetTargetLines(lines, 3);
+[target_lines1] = GetTargetLines(lines1, 7);
+target_lines1 = target_lines1(:,2:4);
 
-figure(2);
+figure(1);
 imshow(BW);
 hold on;
-for k = 1: length(target_lines1)
+for k = 1: length(target_lines)
     xy = [target_lines(k).point1; target_lines(k).point2];
     plot(xy(:,1), xy(:,2), 'LineWidth', 2, 'Color', 'green');
 
